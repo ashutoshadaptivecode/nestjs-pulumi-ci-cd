@@ -24,7 +24,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: preview
-          stack-name: infra_dev
+          stack-name: dev
           github-token: ${{ secrets.TOKEN_GITHUB }}
           work-dir: infra
           upsert: true

@@ -1,4 +1,4 @@
-name: infra_live
+name: infra
 description: A minimal AWS TypeScript Pulumi program
 runtime: nodejs
 config:
