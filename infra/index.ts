@@ -12,7 +12,7 @@ const repoName = `${clusterName}-repo`;
 
 const appPort = 3000;
 const appName = 'nest-pulumi';
-const appFile = 'dist/main.js';
+const appFile = '../dist/main.js';
 const appHealthPath = '/';
 const appExternal = true;
 
