@@ -1,8 +1,8 @@
-name: Pulumi
+name: Pulumi Push
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   update:
     name: Update
