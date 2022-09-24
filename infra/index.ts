@@ -43,8 +43,8 @@ const authWeb = alb.createListener(appName, {
 new awsx.ecs.FargateService(appName, {
   cluster,
   taskDefinitionArgs: {
-    // cpu: '1',
-    // memory: '3',
+    cpu: '500',
+    memory: '1024',
 
     container: {
       //   cpu: 1,
