@@ -1,10 +1,7 @@
 name: Pulumi
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  - pull_request
 
 jobs:
   preview:
@@ -23,7 +20,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: npm install
-      
+
       - uses: pulumi/actions@v3
         with:
           command: preview
