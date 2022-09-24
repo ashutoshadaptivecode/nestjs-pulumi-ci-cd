@@ -2,7 +2,7 @@ name: Pulumi Push
 on:
   push:
     branches:
-      - main
+      - dev
 jobs:
   update:
     name: Update
@@ -24,7 +24,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: up
-          stack-name: ashutoshadaptivecode/np_qa
+          stack-name: ashutoshadaptivecode/np_dev
           # github-token: ${{ secrets.TOKEN_GITHUB }}
           work-dir: infra
           upsert: true
