@@ -1,1 +1,3 @@
-name: Test Pulumi
+name: tesDir
+description: A minimal AWS TypeScript Pulumi program
+runtime: nodejs

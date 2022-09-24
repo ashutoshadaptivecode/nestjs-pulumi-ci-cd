@@ -1,0 +1,4 @@
+config:
+  aws:profile: padap
+  aws:region: eu-west-2
+  pulumi:template: aws-typescript
