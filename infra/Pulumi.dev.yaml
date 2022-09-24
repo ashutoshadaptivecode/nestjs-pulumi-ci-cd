@@ -1,3 +1,4 @@
+name: infra_dev
 config:
   aws:profile: padap
   aws:region: eu-west-2
