@@ -1,4 +1,4 @@
-name: Pulumi Push
+name: Pulumi Dev Push
 on:
   push:
     branches:

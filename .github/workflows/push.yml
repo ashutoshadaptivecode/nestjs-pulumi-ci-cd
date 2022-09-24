@@ -1,4 +1,4 @@
-name: Pulumi Push
+name: Pulumi Qa Push
 on:
   push:
     branches:

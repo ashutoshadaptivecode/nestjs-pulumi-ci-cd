@@ -13,7 +13,7 @@ const repoName = `${clusterName}-repo`;
 const appPort = 3000;
 const appName = 'nest-pulumi';
 const appFile = '../dist/main.js';
-const appHealthPath = '/';
+const appHealthPath = '/health';
 const appExternal = true;
 
 // Step 2: Define the Networking for our service.
@@ -50,7 +50,7 @@ new awsx.ecs.FargateService(appName, {
       //   cpu: 1,
       //   memory: 3,
       image: image,
-      command: ['node', appFile],
+      command: ['npm', 'start'],
       portMappings: [authWeb],
       //   environmentFiles: [
       //     { type: 's3', value: 'arn:aws:s3:::ecs-config-crypto-docs/dev/.env' },
