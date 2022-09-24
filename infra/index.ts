@@ -43,13 +43,18 @@ const authWeb = alb.createListener(appName, {
 new awsx.ecs.FargateService(appName, {
   cluster,
   taskDefinitionArgs: {
+    // cpu: '1',
+    // memory: '3',
+
     container: {
+      //   cpu: 1,
+      //   memory: 3,
       image: image,
       command: ['node', appFile],
       portMappings: [authWeb],
-      environmentFiles: [
-        { type: 's3', value: 'arn:aws:s3:::ecs-config-crypto-docs/dev/.env' },
-      ],
+      //   environmentFiles: [
+      //     { type: 's3', value: 'arn:aws:s3:::ecs-config-crypto-docs/dev/.env' },
+      //   ],
     },
   },
   desiredCount: 1,
