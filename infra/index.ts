@@ -2,75 +2,69 @@ import * as pulumi from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws';
 import * as awsx from '@pulumi/awsx';
 
-// Step 1: Create an ECS Fargate cluster.
-
 const clusterName = 'nest-pulumi-dev';
-
-const cluster = new awsx.ecs.Cluster(clusterName);
+const appPort = 3000;
+const appName = 'nest-pulumi';
+const appFile = 'dist/main.js';
+const appHealthPath = '/health';
+const appExternal = true;
 const loadBalancerName = `${clusterName}-lb`;
 const repoName = `${clusterName}-repo`;
 
-const appPort = 3000;
-const appName = 'nest-pulumi';
-const appFile = '../dist/main.js';
-const appHealthPath = '/health';
-const appExternal = true;
+// Create a repository.
+const repo = new awsx.ecr.Repository(repoName);
+const buildImage = repo.buildAndPushImage('../');
 
-// Step 2: Define the Networking for our service.
-const alb = new awsx.lb.ApplicationLoadBalancer(loadBalancerName, {
+const cluster = new awsx.ecs.Cluster(clusterName);
+const lb = new awsx.lb.ApplicationLoadBalancer(loadBalancerName, {
   external: true,
 });
 
-const repo = new awsx.ecr.Repository(repoName);
-
-export const image = repo.buildAndPushImage('../');
-
-const authWeb = alb.createListener(appName, {
+const webApp = lb.createListener(appName, {
   port: appPort,
   protocol: 'HTTP',
   external: appExternal,
   targetGroup: {
     port: appPort,
     protocol: 'HTTP',
-    healthCheck: {
-      path: appHealthPath,
-      protocol: 'HTTP',
-    },
+    // healthCheck: {
+    //   path: appHealthPath,
+    //   protocol: 'HTTP',
+    // },
   },
 });
 
-// Step 4: Create a Fargate service task that can scale out.
 new awsx.ecs.FargateService(appName, {
   cluster,
+  desiredCount: 2,
+  os: 'linux',
+
   taskDefinitionArgs: {
-    cpu: '512',
-    memory: '256',
     container: {
-      cpu: 128,
-      memory: 256,
-      image: image,
-      command: ['npm', 'start'],
-      portMappings: [authWeb],
+      image: buildImage,
+      cpu: 1024,
+      memory: 2048,
+      essential: true,
+      portMappings: [webApp],
+      command: ['node', appFile],
       //   environmentFiles: [
       //     { type: 's3', value: 'arn:aws:s3:::ecs-config-crypto-docs/dev/.env' },
       //   ],
     },
   },
-  desiredCount: 1,
 });
 
-const arn = authWeb.defaultTargetGroup?.targetGroup?.arn;
+const arn = webApp.defaultTargetGroup?.targetGroup?.arn;
 
-authWeb.addListenerRule(`${appName}-rule`, {
+webApp.addListenerRule(`${appName}-rule`, {
   actions: [
     {
       type: 'forward',
       order: 1,
       targetGroupArn: arn,
-      // forward: { targetGroups: [{ arn }] },
     },
   ],
   conditions: [{ pathPattern: { values: [appHealthPath] } }],
 });
 
-export const output = authWeb.endpoint.hostname;
+export const output = webApp.endpoint.hostname;

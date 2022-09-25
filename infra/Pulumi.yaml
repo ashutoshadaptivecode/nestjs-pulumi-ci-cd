@@ -1,7 +1,6 @@
 name: nestPulumi
 description: A minimal AWS TypeScript Pulumi program
 runtime: nodejs
-config:
-  aws:profile: padap
-  aws:region: eu-west-2
-  
+# config:
+#   aws:profile: padap
+#   aws:region: eu-west-2
